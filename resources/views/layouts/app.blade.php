@@ -10,7 +10,6 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 
     <!-- Bootstrap CSS -->
@@ -165,12 +164,14 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0"> <!-- Navigasi utama ke kiri -->
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
                                 <i class="bi bi-grid-1x2-fill me-1"></i> Dashboard
                             </a>
                         </li>
+                        {{-- Hanya tampilkan menu SPK jika pengguna sudah login --}}
+                        @auth
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('alternatives.*') ? 'active' : '' }}" href="{{ route('alternatives.index') }}">
                                 <i class="bi bi-ui-checks-grid me-1"></i> Alternatif
@@ -191,6 +192,53 @@
                                 <i class="bi bi-bar-chart-line-fill me-1"></i> Hasil COPRAS
                             </a>
                         </li>
+                        @endauth
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto"> <!-- Navigasi autentikasi ke kanan -->
+                        @guest
+                            {{-- Tampilkan jika pengguna adalah Guest (belum login) --}}
+                            @if (Route::has('login'))
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->routeIs('login') ? 'active' : '' }}" href="{{ route('login') }}">
+                                        <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                                    </a>
+                                </li>
+                            @endif
+
+                            @if (Route::has('register'))
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->routeIs('register') ? 'active' : '' }}" href="{{ route('register') }}">
+                                        <i class="bi bi-person-plus-fill me-1"></i> Register
+                                    </a>
+                                </li>
+                            @endif
+                        @else
+                            {{-- Tampilkan jika pengguna sudah login --}}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-circle me-1"></i> {{ Auth::user()->name }}
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownUser">
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                                            <i class="bi bi-gear-fill me-1"></i> Profile
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <a class="dropdown-item" href="{{ route('logout') }}"
+                                               onclick="event.preventDefault();
+                                                        this.closest('form').submit();">
+                                                <i class="bi bi-box-arrow-left me-1"></i> Logout
+                                            </a>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endguest
                     </ul>
                 </div>
             </div>
