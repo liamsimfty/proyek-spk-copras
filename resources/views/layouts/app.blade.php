@@ -177,11 +177,13 @@
                                 <i class="bi bi-ui-checks-grid me-1"></i> Alternatif
                             </a>
                         </li>
+                        @if(Auth::user()->name === 'Admin')
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('criteria.*') ? 'active' : '' }}" href="{{ route('criteria.index') }}">
                                 <i class="bi bi-card-checklist me-1"></i> Kriteria
                             </a>
                         </li>
+                        @endif
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('copras.inputScores') ? 'active' : '' }}" href="{{ route('copras.inputScores') }}">
                                 <i class="bi bi-pencil-square me-1"></i> Input Nilai

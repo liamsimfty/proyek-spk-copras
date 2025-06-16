@@ -4,7 +4,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AlternativeController;
 use App\Http\Controllers\CriterionController;
 use App\Http\Controllers\CoprasController;
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -14,6 +16,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// Admin routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
 });
 
 // --- Rute SPK COPRAS ---
@@ -37,9 +44,11 @@ require __DIR__.'/auth.php';
 // Mengarahkan root (/) ke halaman login jika belum login, atau ke dashboard jika sudah login
 Route::get('/', function () {
     if (Auth::check()) {
+        // Check if user is admin
+        if (Auth::user()->name === 'Admin') {
+            return redirect()->route('admin.dashboard');
+        }
         return redirect()->route('dashboard');
     }
-    return redirect()->route('login'); // Atau view('auth.login') jika mau custom
+    return redirect()->route('login');
 });
-
-require __DIR__.'/auth.php';
