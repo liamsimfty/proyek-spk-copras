@@ -5,6 +5,7 @@ use App\Http\Controllers\AlternativeController;
 use App\Http\Controllers\CriterionController;
 use App\Http\Controllers\CoprasController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CaptchaController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -52,3 +53,5 @@ Route::get('/', function () {
     }
     return redirect()->route('login');
 });
+
+Route::get('/captcha', [CaptchaController::class, 'generate'])->name('captcha.generate');
