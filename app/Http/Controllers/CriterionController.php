@@ -5,9 +5,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory; // <-- PASTIKAN BARIS INI
 use App\Models\Criterion;
 use Illuminate\Validation\Rule; // Import Rule
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CriterionController extends Controller
 {
+    public function __construct()
+    {
+        // Check if user is admin for all methods
+        if (!Auth::check() || Auth::user()->name !== 'Admin') {
+            abort(403, 'Unauthorized access. Admin privileges required.');
+        }
+    }
+
     /**
      * Display a listing of the resource.
      */
